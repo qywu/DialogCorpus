@@ -266,7 +266,7 @@ def split_by_index(all_dialogue, index):
 
 
 def replace_http(text):
-    pattern = re.compile("https?:\/\/[-a-zA-Z\./_]+")
+    pattern = re.compile("((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-=#])*")
     text = re.sub(pattern, "url", text)
     return text
 
@@ -433,3 +433,16 @@ def safe_clean_all_dialogue(all_dialogue):
 def save_json(data, file):
     with open(file, "w") as fp:
         json.dump(data, fp, indent=4)
+
+# for different dataset, it could use different function as parameter
+def process_all_dialogue_with_certain_text_process_function(function, all_dialogue):
+    for idx in tqdm.tqdm(range(len(all_dialogue))):
+        for jdx in range(len(all_dialogue[idx])):
+            try:
+                all_dialogue[idx][jdx][1] = function(all_dialogue[idx][jdx][1])
+                #print(all_dialogue[idx][jdx][1])
+            except:
+                print(idx, jdx)
+                print(all_dialogue[idx][jdx])
+
+    return all_dialogue
