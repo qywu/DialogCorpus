@@ -38,9 +38,16 @@ vi daily_dialog/data/daily_dialog.json
     * Nothing specific
 
 * [Frames](https://www.microsoft.com/en-us/research/project/frames-dataset/)
-    * 
+    * Nothing specific
 
+* [Chit-Chat Challenge](https://github.com/BYU-PCCL/chitchat-dataset)
+    * Nothing specific
 
+* [Self-dialogue](https://github.com/jfainberg/self_dialogue_corpus)
+    * Nothing specific
+
+* [Schema Dialog](https://github.com/google-research-datasets/dstc8-schema-guided-dialogue)
+    * Nothing specific
 
 Links
 
