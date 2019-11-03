@@ -28,7 +28,14 @@ vi daily_dialog/data/daily_dialog.json
     * Removed tokenization space for punctuations
 
 * Cornell Movie Corpus
-    * 
+    * Ignored UTF-8 Errors
+    * Extracted Names
+
+* Task Master
+    * Nothing specific
+
+* CCPE
+    * Nothing specific
 
 
 

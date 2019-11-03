@@ -1,4 +1,5 @@
 data
+*.ipynb
 # log files
 *.log
 # pickle and torch files
