@@ -20,7 +20,7 @@ def init_logging(debug=False):
 
 def delete_words(delete_list, text):
     for item in delete_list:
-        text.replace(item, "")
+        text = text.replace(item, "")
     return text
 
 
