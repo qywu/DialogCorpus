@@ -83,11 +83,7 @@ Except noted, all of the following processed dialogue contains test set of the o
 * winning-args-corpus
     * nothing left
 
-###issue left:
-1. should we delete all the 1 turn dialogue?
-2. wiki-corpus, movie corpus takes too long to process, figure it out
-3. More process on supreme
-4. check all processed dataset.
+
 
 Links
 
