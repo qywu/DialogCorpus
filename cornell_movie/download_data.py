@@ -13,8 +13,8 @@ sys.path.insert(0, parent_dir)
 from utils import *
 
 gdrive_template = "https://drive.google.com/uc?id="
-file_name = "daily_dialog.zip"
-file_dir = "daily_dialog/data"
+file_name = "cornell_movie.zip"
+file_dir = "cornell_movie/data"
 
 if __name__ == "__main__":
     file_id = "18qjvOG_i4iPDI7RcE3X7O5-7SEtUszML"
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     os.makedirs(file_dir, exist_ok=True)
     file_path = os.path.join(file_dir, file_name)
     
-    logger.info("Downloading Daily Dialog file!")
+    logger.info("Downloading Cornell Movie file!")
 
     gdown.download(url, file_path, quiet=False)
     

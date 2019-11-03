@@ -52,6 +52,9 @@ def save_as_json(data, file):
 def safe_clean_text(text):
     """ This is a safe text cleaning procedure for all datasets
     """
+    # strip
+    text = text.strip()
+
     # weird words
     text = delete_words(delete_list, text)
 
@@ -59,7 +62,7 @@ def safe_clean_text(text):
     text = text.replace(r"\\", "")
 
     # remove extra spaces
-    text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r'\s+', ' ', text)
 
     # fix puncutations
     for p in punctuations:
@@ -94,6 +97,8 @@ def recover_lower_case(text):
     # capitalize ?!.
     text = re.sub(r"(?<=[\.?!]\s+)\w", lambda pat: pat.group(0).upper(), text)
     # capitalize I (match ', end, space)
-    text = re.sub(r"(?<=\s+)i(?=('|$|\s))", lambda pat: pat.group(0).upper(), text)
+    text = re.sub(
+        r"(?<=\s+)i(?=('|$|\s))", lambda pat: pat.group(0).upper(), text
+    )
 
     return text

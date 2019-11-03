@@ -17,7 +17,7 @@ python daily_dialog/process_data.py
 vi daily_dialog/data/daily_dialog.json
 ```
 
-## Detailed Dialog Filtering Process for each dataset:
+## Detailed Dialog Processing for each dataset:
 
 * Daily Dialog
     * Removed tokenization space for punctuations
