@@ -312,8 +312,8 @@ def split_by_index(all_dialogue, index):
 
 
 def replace_http(text):
-    pattern = re.compile("((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-=#])*")
-    text = re.sub(pattern, "url", text)
+    pattern = re.compile(r"https?://[\S]{4}[\S]*")
+    text = re.sub(pattern, "URL", text)
     return text
 
 
@@ -567,6 +567,23 @@ def wiki_corpus_extra_text_process(all_dialogue):
 
         pattern_wikicorpus_6 = re.compile(r"([[]http[^\s]+) +((.)+?)\]")
         text = re.sub(pattern_wikicorpus_6, lambda pat: pat.group(2), text)
+
+        pattern_wikicorpus_5 = re.compile(r"([[]http[^\s]+)\]")
+        text = re.sub(pattern_wikicorpus_5, "", text)
+
+        pattern_wikicorpus_6 = re.compile(r"([[(]https?:\\[^\s]+)")
+        text = re.sub(pattern_wikicorpus_6, "", text)
+
+        pattern_wikicorpus_6 = re.compile(r"(https?:\\[^\s]+)")
+        text = re.sub(pattern_wikicorpus_6, "URL", text)
+
+        pattern_wikicorpus_6 = re.compile(r"<small(.)$")
+        text = re.sub(pattern_wikicorpus_6, "", text)
+
+        pattern_wikicorpus_6 = re.compile(r"<span(.)$")
+        text = re.sub(pattern_wikicorpus_6, "", text)
+
+
 
         text = text.replace("\\\"", "\"")
         text = text.replace("\"\\", "\"")
