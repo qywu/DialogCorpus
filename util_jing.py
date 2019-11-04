@@ -14,7 +14,7 @@ def init_logging(debug=False):
 
     logging.basicConfig(format=format_str, level=LEVEL)
 
-delete_list = ["&gt;", "&gt", "¡ª"]
+delete_list = ["&gt;", "&gt", "¡ª", "-- '''"]
 punctuations = [r" ?", r" !", r" .", r" ,"]
 
 
@@ -226,6 +226,52 @@ def process_single_text(text):
     return text
 
 
+def process_unusual_unicode(text):
+
+    # weird unicode bug
+    text = re.sub(u"(\u2018|\u2019)", "'", text)
+    # replace to EN dash
+    text = re.sub(u"\u2014", "-", text)
+    text = re.sub(u"\u2013", "-", text)
+    # pound money symbol and en money symbol
+    text = re.sub(u"(\u00a3|\u20ac)", "$", text)
+    # "“" and "”"
+    text = re.sub(u"(\u201c|\u201d)", "\"", text)
+    # middle point
+    text = re.sub(u"\u00b7", ".", text)
+    # three middle point
+    text = re.sub(u"\u2026", " ", text)
+    # Vulgar Fraction One Half
+    text = re.sub(u"\u00bd", ".5 ", text)
+    # Vulgar Fraction three quarters
+    text = re.sub(u"\u00be", ".75 ", text)
+    # Latin Small Letter E with Acute
+    text = re.sub(u"(\u00e9|\u00e8|\u00ea)", "e", text)
+    # ä
+    text = re.sub(u"(\u00e4|\u00e0)", "a", text)
+    # latin i
+    text = re.sub(u"\u00ef|\u00ee", "i", text)
+    # ä
+    text = re.sub(u"(\u00f4|\u00f6|\u00d6|\u00d4)", "o", text)
+    # tempture and other
+    text = re.sub(u"(\u00b0|\u00ba)", "", text)
+    # 1/4
+    text = re.sub(u"\u00bc", "", text)
+    # another latin u. Making more sense when deleting it.
+    text = re.sub(u"\0214", " ", text)
+    text = re.sub(u"\00e7", ".75 ", text)
+    text = re.sub(u"(\00c1|\u00e2)", "a", text)
+    text = re.sub(u"\00ff", "y", text)
+    text = re.sub(u"\u00df", "s", text)
+    text = re.sub(u"\u017e", "z", text)
+    text = re.sub(u"\0213", "r", text)
+    text = re.sub(u"\00e7", "c", text)
+    text = re.sub(u"\00f1", "n", text)
+    text = re.sub(u"(\00fc|\u00f9)", "u", text)
+
+    return text
+
+
 def process_all_dialogue_text(all_dialogue):
     flag = True
     for idx in range(len(all_dialogue)):
@@ -296,16 +342,20 @@ def add_dialogue_index(prefix, all_dialogue):
 
 
 def convokit_split_dialogue_by_root(all_dialogue):
+    logger.info("spliting dialogue .....")
     root_dict = defaultdict(list)
     for one_dialogue in all_dialogue:
         root_ = one_dialogue["root"]
         root_dict[root_].append(one_dialogue)
 
+    logger.info("done split dialogue")
     return [value for key, value in root_dict.items()]
 
 
 def convokit_extract_user_and_text_not_used_right_now(all_dialogue):
     # this is used with convokit_find_longest_two_person_sequence
+
+    logger.info("extracting user and text....")
 
     print("this is used with convokit_find_longest_two_person_sequence")
 
@@ -316,6 +366,8 @@ def convokit_extract_user_and_text_not_used_right_now(all_dialogue):
         if new_one_dialogue != 0:
             new_one_dialogue = [[one["user"], one["text"]] for one in new_one_dialogue]
             new_all_dialogue.append(new_one_dialogue)
+
+    logger.info("done extract user and text....")
     return new_all_dialogue
 
 
@@ -401,6 +453,7 @@ def safe_clean_text(text):
 
     # http
     text = replace_http(text)
+    text = process_unusual_unicode(text)
 
     # remove extra spaces
     text = re.sub(r'\s+', ' ', text).strip()
@@ -418,14 +471,27 @@ def safe_clean_text(text):
 
 
 def safe_clean_all_dialogue(all_dialogue):
-    for idx in tqdm.tqdm(range(len(all_dialogue))):
-        for jdx in range(len(all_dialogue[idx])):
-            try:
-                all_dialogue[idx][jdx][1] = safe_clean_text(all_dialogue[idx][jdx][1])
-                #print(all_dialogue[idx][jdx][1])
-            except:
-                print(idx, jdx)
-                print(all_dialogue[idx][jdx])
+
+    use_tqdm = False
+
+    if use_tqdm:
+        for idx in tqdm.tqdm(range(len(all_dialogue))):
+            for jdx in range(len(all_dialogue[idx])):
+                try:
+                    all_dialogue[idx][jdx][1] = safe_clean_text(all_dialogue[idx][jdx][1])
+                    #print(all_dialogue[idx][jdx][1])
+                except:
+                    print(idx, jdx)
+                    print(all_dialogue[idx][jdx])
+    else:
+        for idx in range(len(all_dialogue)):
+            for jdx in range(len(all_dialogue[idx])):
+                try:
+                    all_dialogue[idx][jdx][1] = safe_clean_text(all_dialogue[idx][jdx][1])
+                    #print(all_dialogue[idx][jdx][1])
+                except:
+                    print(idx, jdx)
+                    print(all_dialogue[idx][jdx])
 
     return all_dialogue
 
@@ -436,13 +502,74 @@ def save_json(data, file):
 
 # for different dataset, it could use different function as parameter
 def process_all_dialogue_with_certain_text_process_function(function, all_dialogue):
-    for idx in tqdm.tqdm(range(len(all_dialogue))):
+
+    use_tqdm = False
+    if use_tqdm:
+        for idx in tqdm.tqdm(range(len(all_dialogue))):
+            for jdx in range(len(all_dialogue[idx])):
+                try:
+                    all_dialogue[idx][jdx][1] = function(all_dialogue[idx][jdx][1])
+                    #print(all_dialogue[idx][jdx][1])
+                except:
+                    print(idx, jdx)
+                    print(all_dialogue[idx][jdx])
+    else:
+        for idx in range(len(all_dialogue)):
+            for jdx in range(len(all_dialogue[idx])):
+                try:
+                    all_dialogue[idx][jdx][1] = function(all_dialogue[idx][jdx][1])
+                    #print(all_dialogue[idx][jdx][1])
+                except:
+                    print(idx, jdx)
+                    print(all_dialogue[idx][jdx])
+
+
+    return all_dialogue
+
+
+def delete_double_dash_all_dialogue(all_dialogue):
+    for idx in range(len(all_dialogue)):
         for jdx in range(len(all_dialogue[idx])):
             try:
-                all_dialogue[idx][jdx][1] = function(all_dialogue[idx][jdx][1])
-                #print(all_dialogue[idx][jdx][1])
+
+                text = all_dialogue[idx][jdx][1]
+                text = text.strip()
+                text = re.sub('(--)$', '', text)
+                text = re.sub('(-)$', '', text)
+                # text = text.replace("--", ",")
+                # text = text.replace("-", ",")
+                text = text.strip()
+                all_dialogue[idx][jdx][1] = text
             except:
                 print(idx, jdx)
                 print(all_dialogue[idx][jdx])
-
+    # print("done")
     return all_dialogue
+
+# this is only for wiki-corpus dataset
+def wiki_corpus_extra_text_process(all_dialogue):
+
+    def text_process(text):
+        pattern_wikicorpus = re.compile("-*''+<(.)+>")
+        text = re.sub(pattern_wikicorpus, " ", text)
+
+        pattern_wikicorpus_2 = re.compile("--+'*<(.)+>")
+        text = re.sub(pattern_wikicorpus_2, " ", text)
+
+        pattern_wikicorpus_3 = re.compile("(-+ *'+)$")
+        text = re.sub(pattern_wikicorpus_3, " ", text)
+
+        pattern_wikicorpus_4 = re.compile("'''[[][[](.)+(<sub>)$")
+        text = re.sub(pattern_wikicorpus_4, " ", text)
+
+        pattern_wikicorpus_5 = re.compile(r"([[]http[^\s]+) +((.)+)\]$")
+        text = re.sub(pattern_wikicorpus_5, lambda pat: pat.group(2), text)
+
+        pattern_wikicorpus_6 = re.compile(r"([[]http[^\s]+) +((.)+?)\]")
+        text = re.sub(pattern_wikicorpus_6, lambda pat: pat.group(2), text)
+
+        text = text.replace("\\\"", "\"")
+        text = text.replace("\"\\", "\"")
+        return text
+
+    return process_all_dialogue_with_certain_text_process_function(text_process, all_dialogue)

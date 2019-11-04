@@ -38,8 +38,8 @@ dataset_name = "wiki-corpus"
 raw_data = read_json("full/wiki-corpus/utterances.json")
 
 all_dialogue = convokit_split_dialogue_by_root(raw_data)
-all_dialogue = convokit_extract_user_and_text(all_dialogue)
-all_dialogue = delete_more_persons_dialogue(all_dialogue)
+all_dialogue = multiple_thread_method(convokit_extract_user_and_text, all_dialogue)
+all_dialogue = multiple_thread_method(delete_more_persons_dialogue, all_dialogue)
 all_dialogue = multiple_thread_method(delete_double_dash_all_dialogue, all_dialogue)
 logger.info("deleting double dash.....")
 # all_dialogue = process_all_dialogue_with_certain_text_process_function(delete_double_dash, all_dialogue)
@@ -53,6 +53,9 @@ all_dialogue = multiple_thread_method(delete_empty_sentence, all_dialogue)
 
 logger.info("deleting dialogue that contains only one turn")
 all_dialogue = multiple_thread_method(delete_one_turn_dialogue, all_dialogue)
+
+logger.info("this is designed for wikli-corpus dataset,  processing...")
+all_dialogue = multiple_thread_method(wiki_corpus_extra_text_process, all_dialogue)
 
 logger.info("safe cleaning all dialogue......")
 all_dialogue = multiple_thread_method(safe_clean_all_dialogue, all_dialogue)
