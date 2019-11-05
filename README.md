@@ -8,14 +8,26 @@ First download the repository.
 # download
 git clone https://github.com/qywu/DialogCorpus.git
 cd DialogCorpus
+```
 
-# download data for the specific task
+You can manually download and process the dataset.
+```bash
+# download data for daily_dialog
 python daily_dialog/download_data.py
 # process the data
 python daily_dialog/process_data.py
 # the processed data is stored as the {folder_name}.json
 vi daily_dialog/data/daily_dialog.json
 ```
+
+Or you can just use one command.
+```bash
+python prepare_all_data.py \
+       --download \
+       --process \
+       --join
+```
+
 
 ## Detailed Dialog Processing for each dataset:
 
