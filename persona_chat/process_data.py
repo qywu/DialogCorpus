@@ -27,6 +27,8 @@ if __name__ == "__main__":
     for dialog in tqdm.tqdm(all_dialog):
         new_dialog = []
         for turn in dialog:
+            if turn == "__ SILENCE __":
+                continue
             turn = recover_lower_case(turn)
             turn = safe_clean_text(turn)
             new_dialog.append(turn)

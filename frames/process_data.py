@@ -31,6 +31,8 @@ if __name__ == "__main__":
 
         all_dialogs.append(one_dialog)
 
+    all_dialogs = add_dialogue_index("frames", all_dialogs)
+
         # save the data
     file_path = os.path.join("frames/data/frames.json")
     logger.info("Saving Frames Dataset")

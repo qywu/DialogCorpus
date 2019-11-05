@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-delete_list = ["&gt", "¡ª"]
+delete_list = ["&gt;", "&gt", "¡ª", "-- '''"]
 punctuations = [r" ?", r" !", r" .", r" ,"]
 
 
@@ -31,9 +31,9 @@ def add_persons(all_dialogue):
     for idx in range(len(all_dialogue)):
         for jdx in range(len(all_dialogue[idx])):
             if jdx % 2 == 0:
-                all_dialogue[idx][jdx] = ["Role1", all_dialogue[idx][jdx]]
+                all_dialogue[idx][jdx] = ["A", all_dialogue[idx][jdx]]
             if jdx % 2 == 1:
-                all_dialogue[idx][jdx] = ["Role2", all_dialogue[idx][jdx]]
+                all_dialogue[idx][jdx] = ["B", all_dialogue[idx][jdx]]
     return all_dialogue
 
 
@@ -45,7 +45,7 @@ def add_dialogue_index(prefix, all_dialogue):
 
 
 def save_as_json(data, file):
-    with open(file, "w") as fp:
+    with open(file, "w", encoding='utf-8') as fp:
         json.dump(data, fp, indent=4)
 
 
@@ -101,4 +101,10 @@ def recover_lower_case(text):
         r"(?<=\s+)i(?=('|$|\s))", lambda pat: pat.group(0).upper(), text
     )
 
+    return text
+
+
+def replace_http(text):
+    pattern = re.compile(r"https?[\S]+[^\)|.|\s]")
+    text = re.sub(pattern, "URL", text)
     return text
