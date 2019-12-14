@@ -43,10 +43,10 @@ python prepare_all_data.py \
     * Ignored UTF-8 Errors
     * Extracted Names
 
-* Task Master
+* [Task Master](https://ai.google/tools/datasets/taskmaster-1)
     * Nothing specific
 
-* [CCPE] (https://ai.google/tools/datasets/coached-conversational-preference-elicitation)
+* [CCPE](https://ai.google/tools/datasets/coached-conversational-preference-elicitation)
     * Nothing specific
 
 * [Frames](https://www.microsoft.com/en-us/research/project/frames-dataset/)
