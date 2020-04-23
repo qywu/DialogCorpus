@@ -4,9 +4,9 @@ import json
 import subprocess
 import tqdm
 import logging
-from torchfly.utils import init_logging
+# from torchfly.utils import init_logging
 
-init_logging()
+# init_logging()
 logger = logging.getLogger(__name__)
 
 datasets = [
